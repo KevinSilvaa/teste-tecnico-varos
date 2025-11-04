@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/prisma/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum USER_TYPE {
+  CONSULTOR
+  CUSTOMER
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  publicId   String    @unique @default(uuid())
+  type       USER_TYPE
+  name       String
+  email      String    @unique
+  phone      String
+  age        Int
+  cpf        String    @unique
+  cep        String
+  state      String
+  address    String
+  complement String?
+
+  createdAt DateTime @default(now())
+
+  customers       UserOnConsultor[] @relation("ConsultorCustomers")
+  UserOnConsultor UserOnConsultor[] @relation("Customer")
+
+  @@map("users")
+}
+
+model UserOnConsultor {
+  id          Int @id @default(autoincrement())
+  consultorId Int
+  customerId  Int
+
+  consultor User @relation("ConsultorCustomers", fields: [consultorId], references: [id])
+  customer  User @relation("Customer", fields: [customerId], references: [id])
+
+  @@unique([consultorId, customerId])
+  @@map("users_on_consultors")
+}
+

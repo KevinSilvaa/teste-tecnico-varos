@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@theme {
+  /* Primary Colors */
+  --color-photodermas: #0F6051;
+  --color-s-green: #00F700;
+  --color-fl-green: #19C819;
+  --color-doctor: #FAFAFA;
+  --color-c-black: #131313;
+
+  /* Greyscale */
+  --color-gray-100: #f2f4f8;
+  --color-gray-200: #e2e5eb;
+  --color-gray-300: #d3d6df;
+  --color-gray-400: #c6cad2;
+  --color-gray-500: #b0b7be;
+  --color-gray-600: #878d96;
+  --color-gray-700: #4d5358;
+  --color-gray-800: #222729;
+  --color-gray-900: #131516;
+
+  /* Green Palette */
+  --color-green-200: #4fe04f;
+  --color-green-400: #43af43;
+  --color-green-500: #3c963c;
+  --color-green-600: #317a31;
+  --color-green-700: #255925;
+  --color-green-800: #1b3f1b;
+
+  /* Turquoise Palette */
+  --color-turquoise-100: #39ffd9;
+  --color-turquoise-200: #00f0c9;
+  --color-turquoise-300: #12d8b2;
+  --color-turquoise-400: #1cb799;
+  --color-turquoise-500: #239b84;
+  --color-turquoise-600: #287F6E;
+  --color-turquoise-700: #296055;
+  --color-turquoise-800: #284741;
+  --color-turquoise-900: #273835;
+
+  /* Blue Palette */
+  --color-blue-900: #253b45;
+  --color-blue-800: #335260;
+  --color-blue-700: #3e6475;
+  --color-blue-600: #477387;
+  --color-blue-500: #4f8096;
+  --color-blue-400: #578fa8;
+  --color-blue-300: #62a2bf;
+  --color-blue-200: #6cb2d2;
+  --color-blue-100: #72c5e9;
+
+  /* Purple Palette */
+  --color-purple-900: #2c0045;
+  --color-purple-800: #370057;
+  --color-purple-700: #4a0075;
+  --color-purple-600: #610099;
+  --color-purple-500: #6c00ab;
+  --color-purple-400: #7e00c7;
+  --color-purple-300: #8d00de;
+  --color-purple-200: #a200ff;
+  --color-purple-100: #a956ff;
+
+  /* Red Palette */
+  --color-red-100: #FEF2F2;
+  --color-red-200: #FECACA;
+  --color-red-300: #FCA5A5;
+  --color-red-400: #F87171;
+  --color-red-500: #EF4444;
+  --color-red-600: #DC2626;
+  --color-red-700: #B91C1C;
+  --color-red-800: #991B1B;
+  --color-red-900: #7F1D1D;
+
+  /* Neutral Colors */
+  --color-neutral-alpha-weak: rgba(242, 244, 248, 0.1)
+}
+
+body {
+  background: var(--color-c-black);
+}
