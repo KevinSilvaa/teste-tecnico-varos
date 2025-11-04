@@ -25,8 +25,9 @@ export function SearchableSelect({
   selectId,
   options,
 }: SearchableSelectProps) {
-  // keep single-select type for now; handle multiple separately if needed
-  const [selected, setSelected] = useState<string | undefined>(undefined);
+  const [selected, setSelected] = useState<string | string[] | undefined>(
+    multiple ? [] : undefined
+  );
   const [currentQuery, setCurrentQuery] = useState<string | undefined>(
     undefined
   );
@@ -40,17 +41,30 @@ export function SearchableSelect({
       )
     : options;
 
-  function handleSelect(value: string) {
+  function handleSelect(value: string | string[]) {
     const params = new URLSearchParams(searchParams.toString());
 
     setSelected(value);
 
-    const selectedValue = options.find((opt) => opt.publicId === value);
+    if (multiple && Array.isArray(value)) {
+      console.log(value)
+      const selectedPublicIds = value
+        .map((id) => options.find((opt) => opt.publicId === id)?.publicId)
+        .filter(Boolean);
 
-    if (selectedValue?.label) {
-      params.set(selectId, selectedValue.label);
+      if (selectedPublicIds.length > 0) {
+        params.set(selectId, selectedPublicIds.join(", "));
+      } else {
+        params.delete(selectId);
+      }
     } else {
-      params.delete(selectId);
+      const selectedValue = options.find((opt) => opt.publicId === value);
+
+      if (selectedValue?.label) {
+        params.set(selectId, selectedValue.label);
+      } else {
+        params.delete(selectId);
+      }
     }
 
     return router.replace(`?${params.toString()}`);
@@ -66,19 +80,30 @@ export function SearchableSelect({
 
       <Combobox
         value={selected}
-        onChange={(value) => handleSelect(value as string)}
+        onChange={(value) => handleSelect(value as string | string[])}
         multiple={multiple}
       >
         <div className="relative w-full">
-          <ComboboxButton>
+          <ComboboxButton className="w-full">
             <ComboboxInput
               className={clsx(
                 "w-full rounded-lg border max-h-10 bg-gray-900 py-2.5 pr-8 pl-4 text-sm/6 border-gray-800 text-gray-600",
                 "focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-gray-800"
               )}
-              displayValue={(value: string | undefined) =>
-                options.find((opt) => opt.publicId === value)?.label ?? ""
-              }
+              displayValue={(value: string | string[] | undefined) => {
+                if (multiple && Array.isArray(value)) {
+                  const selectedLabels = value
+                    .map(
+                      (id) => options.find((opt) => opt.publicId === id)?.label
+                    )
+                    .filter(Boolean);
+                  return selectedLabels.join(", ");
+                }
+
+                return (
+                  options.find((opt) => opt.publicId === value)?.label ?? ""
+                );
+              }}
               placeholder="Selecione uma opcao"
               onChange={(event) => setCurrentQuery(event.target.value)}
             />

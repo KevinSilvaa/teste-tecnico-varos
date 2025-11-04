@@ -43,9 +43,12 @@ export function Input({
             {...field}
             id={id}
             onChange={(e) => {
-              handleInputMaskFunction(e, props.mask!);
-
-              field.onChange(e);
+              if (props.mask) {
+                handleInputMaskFunction(e, props.mask!);
+                field.onChange(e);
+              } else {
+                field.onChange(e);
+              }
             }}
           />
 

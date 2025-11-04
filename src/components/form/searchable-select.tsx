@@ -28,7 +28,9 @@ export function SearchableSelect({
     <Controller
       name={name}
       control={control}
-      render={({ field, fieldState: { error } }) => (
+      render={({ field, fieldState: { error } }) => {
+console.log({ field: field.value })
+        return (
         <div className="flex flex-col gap-2">
           <NativeSearchableSelect
             selectId={selectId}
@@ -41,7 +43,8 @@ export function SearchableSelect({
             <span className="mt-0.5 text-xs text-red-600">{error.message}</span>
           )}
         </div>
-      )}
+      )
+      }}
     />
   );
 }

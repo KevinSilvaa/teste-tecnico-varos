@@ -8,14 +8,10 @@ import { Select } from "@/components/form/select";
 import { Input } from "@/components/form/input";
 import { FormTabs } from "./form-tabs";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  deleteUserAction,
-  getUserDataAction,
-  upsertUserAction,
-} from "../actions";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import type { USER_TYPE } from "prisma/generated";
+import type { User, USER_TYPE } from "prisma/generated";
+import { UserDAL } from "@/server/data-access-layer/UserDAL";
 
 const upsertUserFormSchema = z.object({
   type: z.enum(["CUSTOMER", "CONSULTOR"], {
@@ -44,20 +40,25 @@ const upsertUserFormSchema = z.object({
     .string({ error: "O endereço é obrigatório" })
     .min(3, "Digite um endereço válido"),
   complement: z.string().optional(),
-  customers: z.array(z.string()).optional(),
 });
 
 export type UpsertUserFormSchema = z.infer<typeof upsertUserFormSchema>;
 
-export function UpsertUserForm() {
+type UpsertUserFormProps = {
+  customersOptions: User[];
+};
+
+export function UpsertUserForm({ customersOptions }: UpsertUserFormProps) {
   const searchParams = useSearchParams();
   const customerPublicId = searchParams.get("customerPublicId") ?? undefined;
+
+  const customers = searchParams.get("addCustomers")?.split(", ");
 
   const methods = useForm<UpsertUserFormSchema>({
     resolver: zodResolver(upsertUserFormSchema),
     defaultValues: async () => {
       if (customerPublicId) {
-        const getUserDataActionResponse = await getUserDataAction({
+        const getUserDataActionResponse = await UserDAL.getUserData({
           publicId: customerPublicId,
         });
 
@@ -75,7 +76,6 @@ export function UpsertUserForm() {
             state: userData.state ?? "",
             type: (userData.type as USER_TYPE) ?? "CUSTOMER",
             complement: userData.complement ?? undefined,
-            customers: undefined,
           };
         }
       }
@@ -98,14 +98,17 @@ export function UpsertUserForm() {
 
   const {
     handleSubmit,
-    formState: { isSubmitting, isValid },
+    formState: { isSubmitting },
   } = methods;
 
   const router = useRouter();
 
   async function handleUpsertUserFormSubmit(data: UpsertUserFormSchema) {
-    const upsertActionResponse = await upsertUserAction({
-      data,
+    const upsertActionResponse = await UserDAL.upsertUser({
+      data: {
+        ...data,
+        customers: customers ?? [],
+      },
       publicId: customerPublicId,
     });
 
@@ -123,7 +126,7 @@ export function UpsertUserForm() {
   }
 
   async function handleDeleteUser() {
-    const deleteUserActionResponse = await deleteUserAction({
+    const deleteUserActionResponse = await UserDAL.deleteUser({
       publicId: customerPublicId,
     });
 
@@ -206,7 +209,7 @@ export function UpsertUserForm() {
           placeholder="Digite o email"
         />
 
-        <FormTabs />
+        <FormTabs customersOptions={customersOptions} />
       </div>
     </FormProvider>
   );

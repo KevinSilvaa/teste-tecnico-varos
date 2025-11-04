@@ -1,7 +1,7 @@
 "use client";
 
+import { SearchableSelect } from "@/app/_components/searchable-select";
 import { Input } from "@/components/form/input";
-import { SearchableSelect } from "@/components/form/searchable-select";
 import { Select } from "@/components/form/select";
 import { cn } from "@/utils/cn";
 import * as Tabs from "@radix-ui/react-tabs";
@@ -10,14 +10,15 @@ import type { User } from "prisma/generated";
 
 type FormTabsProps = {
   customer?: User;
+  customersOptions: User[];
 };
 
-export function FormTabs({ customer }: FormTabsProps) {
+export function FormTabs({ customer, customersOptions }: FormTabsProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   function handleSetSelectedTab(tab: "basic-informations" | "add-customers") {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(window.location.search);
     params.set("tab", tab);
 
     router.replace(`?${params.toString()}`);
@@ -55,28 +56,10 @@ export function FormTabs({ customer }: FormTabsProps) {
     { label: "Tocantins", value: "TO" },
   ];
 
-  const customersOptions = [
-    {
-      label: "Kevin Azevedo da Silva",
-      publicId: "some-random-public-id-1",
-    },
-    {
-      label: "Joao Azevedo da Silva",
-      publicId: "some-random-public-id-2",
-    },
-    {
-      label: "Bia Azevedo da Silva",
-      publicId: "some-random-public-id-3",
-    },
-    {
-      label: "Samara Azevedo da Silva",
-      publicId: "some-random-public-id-4",
-    },
-    {
-      label: "Rebeca Azevedo da Silva",
-      publicId: "some-random-public-id-5",
-    },
-  ];
+  const customersOptionsFiltered = customersOptions.map((customer) => ({
+    label: customer.name,
+    publicId: customer.publicId,
+  }));
 
   return (
     <Tabs.Root
@@ -107,7 +90,7 @@ export function FormTabs({ customer }: FormTabsProps) {
             }
           )}
           value="add-customers"
-          disabled={customer?.type === "CUSTOMER" || !customer}
+          disabled={customer?.type === "CUSTOMER"}
         >
           Adicionar clientes
         </Tabs.Trigger>
@@ -170,13 +153,10 @@ export function FormTabs({ customer }: FormTabsProps) {
             Clientes
           </label>
 
-          {/* TODO: FIX THIS SELECT FLOW */}
-
           <SearchableSelect
-            name="customers"
             selectId="addCustomers"
             multiple
-            options={customersOptions}
+            options={customersOptionsFiltered}
           />
         </div>
       </Tabs.Content>

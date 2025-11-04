@@ -88,12 +88,27 @@ export async function DashboardContentAsync({
   startDate,
   endDate,
 }: DashboardContentAsyncProps) {
-  // TODO: USE START DATE AND END DATE
+  const start =
+    startDate && !isNaN(new Date(startDate).getTime())
+      ? new Date(startDate)
+      : undefined;
+
+  const end =
+    endDate && !isNaN(new Date(endDate).getTime())
+      ? new Date(endDate)
+      : undefined;
 
   const customersWhere: Prisma.UserWhereInput = {
-    type: "CUSTOMER",
+    createdAt:
+      start && end
+        ? { gte: start, lte: end }
+        : start
+        ? { gte: start }
+        : end
+        ? { lte: end }
+        : undefined,
     UserOnConsultor: {
-      every: {
+      some: {
         consultor: {
           name: consultorName
             ? {
@@ -119,14 +134,18 @@ export async function DashboardContentAsync({
 
   const costumersCount = await prisma.user.count({
     where: customersWhere,
-  })
+  });
 
   return (
     <>
       <h1 className="text-doctor font-bold text-[32px]">Dashboard</h1>
 
       <div className="flex items-center justify-between">
-        <CustomersCard costumersCount={costumersCount} />
+        <CustomersCard
+          costumersCount={costumersCount}
+          startDate={startDate}
+          endDate={endDate}
+        />
 
         <TableActions />
       </div>

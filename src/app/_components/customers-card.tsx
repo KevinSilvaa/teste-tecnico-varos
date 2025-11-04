@@ -3,12 +3,16 @@ import { getDaysBetweenDates } from "@/utils/functions/get-days-between-dates";
 import { ArrowUpRight } from "lucide-react";
 
 type CustomersCardProps = {
-  costumersCount: number
-}
+  costumersCount: number;
+  startDate: string;
+  endDate: string;
+};
 
-export function CustomersCard({ costumersCount }: CustomersCardProps) {
-
-
+export function CustomersCard({
+  costumersCount,
+  startDate,
+  endDate,
+}: CustomersCardProps) {
   return (
     <div className="bg-gray-900 text-gray-400 border border-gray-800 rounded-md text-sm flex flex-col gap-2 p-4 w-56">
       <span>Total de clientes</span>
@@ -18,7 +22,13 @@ export function CustomersCard({ costumersCount }: CustomersCardProps) {
         <ArrowUpRight className="size-6 text-s-green" />
       </div>
 
-      {/* <span>nos últimos {getDaysBetweenDates()} dias</span> */}
+      <span>
+        nos últimos{" "}
+        {!(startDate || endDate)
+          ? "7"
+          : getDaysBetweenDates(new Date(startDate), new Date(endDate))}{" "}
+        dias
+      </span>
     </div>
   );
 }
