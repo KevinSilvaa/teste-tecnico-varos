@@ -1,13 +1,18 @@
 "use client";
 
-import { SearchableSelect } from "@/app/_components/searchable-select";
 import { Input } from "@/components/form/input";
+import { SearchableSelect } from "@/components/form/searchable-select";
 import { Select } from "@/components/form/select";
 import { cn } from "@/utils/cn";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useRouter, useSearchParams } from "next/navigation";
+import type { User } from "prisma/generated";
 
-export function FormTabs() {
+type FormTabsProps = {
+  customer?: User;
+};
+
+export function FormTabs({ customer }: FormTabsProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -21,33 +26,33 @@ export function FormTabs() {
   const currentTab = searchParams.get("tab") ?? "basic-informations";
 
   const stateOptions = [
-    { label: "São Paulo", value: "sp" },
-    { label: "Rio de Janeiro", value: "rj" },
-    { label: "Minas Gerais", value: "mg" },
-    { label: "Espírito Santo", value: "es" },
-    { label: "Paraná", value: "pr" },
-    { label: "Santa Catarina", value: "sc" },
-    { label: "Rio Grande do Sul", value: "rs" },
-    { label: "Distrito Federal", value: "df" },
-    { label: "Goiás", value: "go" },
-    { label: "Mato Grosso", value: "mt" },
-    { label: "Mato Grosso do Sul", value: "ms" },
-    { label: "Bahia", value: "ba" },
-    { label: "Sergipe", value: "se" },
-    { label: "Alagoas", value: "al" },
-    { label: "Pernambuco", value: "pe" },
-    { label: "Paraíba", value: "pb" },
-    { label: "Rio Grande do Norte", value: "rn" },
-    { label: "Ceará", value: "ce" },
-    { label: "Piauí", value: "pi" },
-    { label: "Maranhão", value: "ma" },
-    { label: "Pará", value: "pa" },
-    { label: "Amapá", value: "ap" },
-    { label: "Roraima", value: "rr" },
-    { label: "Amazonas", value: "am" },
-    { label: "Acre", value: "ac" },
-    { label: "Rondônia", value: "ro" },
-    { label: "Tocantins", value: "to" },
+    { label: "São Paulo", value: "SP" },
+    { label: "Rio de Janeiro", value: "RJ" },
+    { label: "Minas Gerais", value: "MG" },
+    { label: "Espírito Santo", value: "ES" },
+    { label: "Paraná", value: "PR" },
+    { label: "Santa Catarina", value: "SC" },
+    { label: "Rio Grande do Sul", value: "RS" },
+    { label: "Distrito Federal", value: "DF" },
+    { label: "Goiás", value: "GO" },
+    { label: "Mato Grosso", value: "MT" },
+    { label: "Mato Grosso do Sul", value: "MS" },
+    { label: "Bahia", value: "BA" },
+    { label: "Sergipe", value: "SE" },
+    { label: "Alagoas", value: "AL" },
+    { label: "Pernambuco", value: "PE" },
+    { label: "Paraíba", value: "PB" },
+    { label: "Rio Grande do Norte", value: "RN" },
+    { label: "Ceará", value: "CE" },
+    { label: "Piauí", value: "PI" },
+    { label: "Maranhão", value: "MA" },
+    { label: "Pará", value: "PA" },
+    { label: "Amapá", value: "AP" },
+    { label: "Roraima", value: "RR" },
+    { label: "Amazonas", value: "AM" },
+    { label: "Acre", value: "AC" },
+    { label: "Rondônia", value: "RO" },
+    { label: "Tocantins", value: "TO" },
   ];
 
   const customersOptions = [
@@ -95,47 +100,43 @@ export function FormTabs() {
         </Tabs.Trigger>
 
         <Tabs.Trigger
-          className={cn("py-1 px-2 text-gray-600 rounded", {
-            "bg-gray-700": currentTab === "add-customers",
-          })}
+          className={cn(
+            "py-1 px-2 text-gray-600 rounded disabled:opacity-50 disabled:cursor-not-allowed",
+            {
+              "bg-gray-700": currentTab === "add-customers",
+            }
+          )}
           value="add-customers"
+          disabled={customer?.type === "CUSTOMER" || !customer}
         >
           Adicionar clientes
         </Tabs.Trigger>
       </Tabs.List>
       <Tabs.Content className="flex flex-col gap-6" value="basic-informations">
-        <div className="grid grid-cols-2 gap-6">
-          <Input
-            id="age"
-            name="age"
-            label="Idade"
-            type="number"
-            placeholder="28 anos"
-          />
+        <div className="grid grid-cols-2 items-start gap-6">
+          <Input id="age" name="age" label="Idade" placeholder="28 anos" />
 
           <Input
             id="cpf"
             name="cpf"
             label="CPF"
             placeholder="123.456.789-01"
-            // mask="999.999.999-99"
-            // stripValue
+            mask="000.000.000-00"
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 items-start gap-6">
           <Input
             id="cep"
             name="cep"
             label="CEP"
             placeholder="12345-678"
-            // mask="99999-999"
-            // stripValue
+            mask="00000-000"
           />
 
           <div className="flex flex-col gap-2">
             <label htmlFor="userType" className="text-gray-600">
-              Tipo do usuário
+              Estado
             </label>
 
             <Select
@@ -172,7 +173,9 @@ export function FormTabs() {
           {/* TODO: FIX THIS SELECT FLOW */}
 
           <SearchableSelect
+            name="customers"
             selectId="addCustomers"
+            multiple
             options={customersOptions}
           />
         </div>

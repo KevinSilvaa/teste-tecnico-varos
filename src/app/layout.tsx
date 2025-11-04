@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Red_Hat_Display } from "next/font/google";
 import "./globals.css";
 import { Header } from "../components/header";
+import { Toaster } from "sonner";
 
 const redHatDisplay = Red_Hat_Display({
   variable: "--font-red-hat-display",
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body
         className={`${redHatDisplay.variable} ${redHatDisplay.className} antialiased`}
       >
+        <Toaster />
         <Header />
         <main>{children}</main>
       </body>

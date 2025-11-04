@@ -1,19 +1,20 @@
-'use client'
+"use client";
 
-import type { ComponentPropsWithoutRef, ReactNode } from 'react'
-import { Controller, useFormContext } from 'react-hook-form'
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import { Controller, useFormContext } from "react-hook-form";
 
-import { Input as NativeInput } from "@/components/ui/input"
+import { Input as NativeInput } from "@/components/ui/input";
+import { handleInputMaskFunction } from "@/utils/functions/input-mask-function";
 
-type InputProps = ComponentPropsWithoutRef<'input'> & {
-  label?: string
-  startContent?: ReactNode
-  id: string
-  name: string
-  mask?: string
-  stripValue?: boolean
-  isRequired?: boolean
-}
+type InputProps = ComponentPropsWithoutRef<"input"> & {
+  label?: string;
+  startContent?: ReactNode;
+  id: string;
+  name: string;
+  mask?: string;
+  stripValue?: boolean;
+  isRequired?: boolean;
+};
 
 export function Input({
   label,
@@ -23,7 +24,7 @@ export function Input({
   isRequired = false,
   ...props
 }: InputProps) {
-  const { control } = useFormContext()
+  const { control } = useFormContext();
 
   return (
     <Controller
@@ -32,10 +33,7 @@ export function Input({
       render={({ field, fieldState: { error } }) => (
         <div className="flex flex-col gap-2">
           {label && (
-            <label
-              htmlFor={id}
-              className="whitespace-nowrap text-gray-600"
-            >
+            <label htmlFor={id} className="text-gray-600">
               {label} {isRequired && <span className="text-red-600">*</span>}
             </label>
           )}
@@ -44,14 +42,10 @@ export function Input({
             {...props}
             {...field}
             id={id}
-            error={!!error}
             onChange={(e) => {
-              const rawValue = e.target.value
-              const valueToSet = stripValue
-                ? rawValue.replace(/\D/g, '')
-                : rawValue
+              handleInputMaskFunction(e, props.mask!);
 
-              field.onChange(valueToSet)
+              field.onChange(e);
             }}
           />
 
@@ -61,5 +55,5 @@ export function Input({
         </div>
       )}
     />
-  )
+  );
 }

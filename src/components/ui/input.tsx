@@ -1,76 +1,63 @@
-'use client'
+"use client";
 
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff } from "lucide-react";
 import {
+  type ChangeEvent,
   type ComponentPropsWithoutRef,
   forwardRef,
   type ReactNode,
   useState,
-} from 'react'
-import InputMask from 'react-input-mask'
+} from "react";
 
-import { cn } from '@/utils/cn'
+import { cn } from "@/utils/cn";
+import { handleInputMaskFunction } from "@/utils/functions/input-mask-function";
 
-type InputProps = ComponentPropsWithoutRef<'input'> & {
-  startContent?: ReactNode
-  mask?: string
-  error?: boolean
-}
+type InputProps = ComponentPropsWithoutRef<"input"> & {
+  startContent?: ReactNode;
+  mask?: string;
+};
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
-    {
-      startContent,
-      error,
-      mask,
-      className,
-      id,
-      value,
-      name,
-      type = 'text',
-      ...props
-    },
-    ref,
+    { startContent, className, id, mask, value, name, type = "text", ...props },
+    ref
   ) => {
-    const [showPassword, setShowPassword] = useState(false)
+    const [showPassword, setShowPassword] = useState(false);
 
     return (
-      <div className={cn("flex flex-1 items-center rounded-md border text-gray-600 py-2 px-4 border-gray-800 bg-gray-900 focus-within:border-gray-800", {
-        'border-error': error,
-        'focus-within:border-brand': value,
-      })}
-      >
+      <div className="flex flex-1 max-h-[38px] items-center rounded-md border text-gray-600 py-2 px-4 border-gray-800 bg-gray-900 focus-within:border-gray-800">
         {startContent && startContent}
 
         {mask ? (
-          <InputMask
-            inputRef={ref}
-            mask={mask}
-            type={type}
+          <input
+            type={type === "password" && showPassword ? "text" : type}
             id={id}
             value={value}
             name={name}
+            onChange={(e) => handleInputMaskFunction(e, mask)}
             className={cn(
-              'flex-1 outline-none placeholder:text-sm placeholder:text-gray-600',
-              className,
+              "flex-1 outline-none placeholder:text-gray-600",
+              className
             )}
+            ref={ref}
+            {...props}
           />
         ) : (
           <input
-            type={type === 'password' && showPassword ? 'text' : type}
+            type={type === "password" && showPassword ? "text" : type}
             id={id}
             value={value}
             name={name}
             className={cn(
-              'flex-1 outline-none placeholder:text-sm placholder:text-gray-600',
-              className,
+              "flex-1 outline-none placeholder:text-gray-600",
+              className
             )}
             ref={ref}
             {...props}
           />
         )}
 
-        {type === 'password' &&
+        {type === "password" &&
           (showPassword ? (
             <Eye
               onClick={() => setShowPassword(false)}
@@ -83,8 +70,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             />
           ))}
       </div>
-    )
-  },
-)
+    );
+  }
+);
 
-Input.displayName = 'Input'
+Input.displayName = "Input";

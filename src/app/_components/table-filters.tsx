@@ -1,5 +1,7 @@
+import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { prisma } from "../../../prisma/prisma";
 import { SearchableSelect } from "./searchable-select";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export async function TableFilters() {
   const consultorNameSelectId = "consultorName";
@@ -12,6 +14,7 @@ export async function TableFilters() {
 
   const consultorNameOptions = await prisma.user.findMany({
     where: {
+      type: "CONSULTOR",
       name: {
         contains: consultorNameParam ? consultorNameParam : undefined,
       },
@@ -23,33 +26,19 @@ export async function TableFilters() {
     take: 10,
   });
 
-  // const consultorEmailOptions = await prisma.user.findMany({
-  //   where: {
-  //     email: {
-  //       contains: consultorEmailParam ? consultorEmailParam : undefined,
-  //     },
-  //   },
-  //   select: {
-  //     publicId: true,
-  //     email: true,
-  //   },
-  //   take: 10,
-  // });
-
-  const consultorEmailOptions = [
-    {
-      publicId: 'random-id-1',
-      email: 'random-email-1@gmail.com',
+  const consultorEmailOptions = await prisma.user.findMany({
+    where: {
+      type: "CONSULTOR",
+      email: {
+        contains: consultorEmailParam ? consultorEmailParam : undefined,
+      },
     },
-    {
-      publicId: 'random-id-2',
-      email: 'random-email-2@gmail.com',
+    select: {
+      publicId: true,
+      email: true,
     },
-    {
-      publicId: 'random-id-3',
-      email: 'random-email-3@gmail.com',
-    },
-  ]
+    take: 10,
+  });
 
   return (
     <div className="flex items-center justify-center gap-6 py-4 px-6 border border-gray-800">
@@ -75,12 +64,30 @@ export async function TableFilters() {
         />
       </div>
 
-      {/* <DatePicker /> */}
-
-      {/* <div className="flex items-center justify-center gap-2 text-gray-100">
-        <span>Nome do consultor</span>
-        <Select />
-      </div> */}
+      <div className="flex items-center justify-center gap-2 text-gray-100">
+        <DateRangePicker label="Período" />
+      </div>
     </div>
   );
 }
+
+TableFilters.Skeleton = function TableFiltersSkeleton() {
+  return (
+    <div className="flex items-center justify-center gap-6 py-4 px-6 border border-gray-800">
+      <div className="flex items-center justify-center gap-2 text-gray-100">
+        <Skeleton className="h-4 w-24 bg-gray-800" />
+        <Skeleton className="h-10 w-44" />
+      </div>
+
+      <div className="flex items-center justify-center gap-2 text-gray-100">
+        <Skeleton className="h-4 w-24 bg-gray-800" />
+        <Skeleton className="h-10 w-44" />
+      </div>
+
+      <div className="flex items-center justify-center gap-2 text-gray-100">
+        <Skeleton className="h-4 w-24 bg-gray-800" />
+        <Skeleton className="h-10 w-52" />
+      </div>
+    </div>
+  );
+};
