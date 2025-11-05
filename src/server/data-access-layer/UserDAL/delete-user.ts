@@ -9,9 +9,22 @@ type DeleteUserActionProps = {
 
 export async function deleteUserAction({ publicId }: DeleteUserActionProps) {
   try {
-    await prisma.user.delete({
+    const userToDelete = await prisma.user.findUnique({
       where: {
         publicId,
+      },
+    });
+
+    if (!userToDelete) {
+      return {
+        success: true,
+        error: "User not found",
+      };
+    }
+
+    await prisma.user.delete({
+      where: {
+        id: userToDelete.id,
       },
     });
 

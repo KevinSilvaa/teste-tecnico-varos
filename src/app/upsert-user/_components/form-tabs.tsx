@@ -7,6 +7,7 @@ import { cn } from "@/utils/cn";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { User } from "prisma/generated";
+import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 type FormTabsProps = {
@@ -14,10 +15,16 @@ type FormTabsProps = {
 };
 
 export function FormTabs({ customersOptions }: FormTabsProps) {
+  const [selectedTab, setSelectedTab] = useState<
+    "basic-informations" | "add-customers"
+  >("basic-informations");
+
   const router = useRouter();
   const searchParams = useSearchParams();
 
   function handleSetSelectedTab(tab: "basic-informations" | "add-customers") {
+    setSelectedTab(tab);
+
     const params = new URLSearchParams(window.location.search);
     params.set("tab", tab);
 
@@ -68,7 +75,7 @@ export function FormTabs({ customersOptions }: FormTabsProps) {
   return (
     <Tabs.Root
       className="flex flex-col gap-6"
-      defaultValue={currentTab}
+      defaultValue={selectedTab}
       onValueChange={(tab) =>
         handleSetSelectedTab(tab as "basic-informations" | "add-customers")
       }
@@ -79,7 +86,7 @@ export function FormTabs({ customersOptions }: FormTabsProps) {
       >
         <Tabs.Trigger
           className={cn("py-1 px-2 text-gray-600 rounded", {
-            "bg-gray-700": currentTab === "basic-informations",
+            "bg-gray-700": selectedTab === "basic-informations",
           })}
           value="basic-informations"
         >
@@ -90,7 +97,7 @@ export function FormTabs({ customersOptions }: FormTabsProps) {
           className={cn(
             "py-1 px-2 text-gray-600 rounded disabled:opacity-50 disabled:cursor-not-allowed",
             {
-              "bg-gray-700": currentTab === "add-customers",
+              "bg-gray-700": selectedTab === "add-customers",
             }
           )}
           value="add-customers"

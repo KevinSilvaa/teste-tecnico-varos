@@ -47,7 +47,6 @@ export function SearchableSelect({
     setSelected(value);
 
     if (multiple && Array.isArray(value)) {
-      console.log(value)
       const selectedPublicIds = value
         .map((id) => options.find((opt) => opt.publicId === id)?.publicId)
         .filter(Boolean);

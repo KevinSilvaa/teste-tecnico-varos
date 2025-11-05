@@ -2,10 +2,29 @@ import { Suspense } from "react";
 import { prisma } from "../../../prisma/prisma";
 import { UpsertUserForm } from "./_components/upsert-user-form";
 
-export default async function UpsertUserPage() {
+type UpsertUserPageProps = {
+  searchParams: Promise<{
+    customerPublicId: string;
+  }>;
+};
+
+export default async function UpsertUserPage({
+  searchParams,
+}: UpsertUserPageProps) {
+  const { customerPublicId } = await searchParams;
+
   const customersOptions = await prisma.user.findMany({
     where: {
       type: "CUSTOMER",
+      UserOnConsultor: customerPublicId
+        ? {
+            none: {
+              consultor: {
+                publicId: customerPublicId,
+              },
+            },
+          }
+        : undefined,
     },
   });
 

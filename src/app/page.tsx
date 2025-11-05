@@ -146,10 +146,9 @@ export async function DashboardContentAsync({
 
       return { customers: customers };
     },
-    [startDate, endDate, consultorName, consultorEmail],
+    ["getCustomers"],
     {
       tags: ["customers"],
-      revalidate: 60,
     }
   );
 
