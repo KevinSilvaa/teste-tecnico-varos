@@ -141,6 +141,21 @@ export async function DashboardContentAsync({
     async () => {
       const customers = await prisma.user.findMany({
         where: customersWhere,
+        select: {
+          address: true,
+          age: true,
+          cep: true,
+          complement: true,
+          cpf: true,
+          createdAt: true,
+          updatedAt: true,
+          email: true,
+          name: true,
+          phone: true,
+          publicId: true,
+          state: true,
+          type: true,
+        },
         take: 10,
       });
 

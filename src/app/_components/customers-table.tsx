@@ -6,12 +6,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { User } from "prisma/generated";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CustomersTableRow } from "./customers-table-row";
+import type { USER_TYPE } from "prisma/generated";
 
 type CustomersTableProps = {
-  customers: User[];
+  customers: {
+    publicId: string;
+    type: USER_TYPE;
+    name: string;
+    email: string;
+    phone: string;
+    age: number;
+    cpf: string;
+    cep: string;
+    state: string;
+    address: string;
+    complement: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
 };
 
 export function CustomersTable({ customers }: CustomersTableProps) {

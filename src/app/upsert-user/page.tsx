@@ -16,21 +16,45 @@ export default async function UpsertUserPage({
   const customersOptions = await prisma.user.findMany({
     where: {
       type: "CUSTOMER",
-      UserOnConsultor: customerPublicId
-        ? {
-            none: {
-              consultor: {
-                publicId: customerPublicId,
-              },
+    },
+    select: {
+      address: true,
+      age: true,
+      cep: true,
+      complement: true,
+      cpf: true,
+      createdAt: true,
+      updatedAt: true,
+      email: true,
+      name: true,
+      phone: true,
+      publicId: true,
+      state: true,
+      type: true,
+    },
+  });
+
+  const userThatIsBeingEdited = await prisma.user.findUnique({
+    where: {
+      type: "CONSULTOR",
+      publicId: customerPublicId,
+    },
+    select: {
+      customers: {
+        select: {
+          customer: {
+            select: {
+              publicId: true,
             },
-          }
-        : undefined,
+          },
+        },
+      },
     },
   });
 
   return (
     <Suspense>
-      <UpsertUserForm customersOptions={customersOptions} />
+      <UpsertUserForm userThatIsBeingEdited={userThatIsBeingEdited} customersOptions={customersOptions} />
     </Suspense>
   );
 }

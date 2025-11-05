@@ -2,7 +2,6 @@
 
 import { FormProvider } from "@/components/form/form-provider";
 import { useForm } from "react-hook-form";
-import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Select } from "@/components/form/select";
 import { Input } from "@/components/form/input";
@@ -10,7 +9,7 @@ import { FormTabs } from "../form-tabs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import type { User, USER_TYPE } from "prisma/generated";
+import type { USER_TYPE } from "prisma/generated";
 import { UserDAL } from "@/server/data-access-layer/UserDAL";
 import {
   upsertUserFormSchema,
@@ -18,7 +17,10 @@ import {
 } from "./upsert-user-form-schema";
 import { getDefaultValuesAction } from "./get-default-values-action";
 
-export function UpsertUserForm({ customersOptions }: UpsertUserFormProps) {
+export function UpsertUserForm({
+  userThatIsBeingEdited,
+  customersOptions,
+}: UpsertUserFormProps) {
   const searchParams = useSearchParams();
   const customerPublicId = searchParams.get("customerPublicId") ?? undefined;
 
@@ -80,6 +82,10 @@ export function UpsertUserForm({ customersOptions }: UpsertUserFormProps) {
     { label: "Customer", value: "CUSTOMER" },
     { label: "Consultor", value: "CONSULTOR" },
   ];
+
+  const userThatIsBeingEditedCustomers = userThatIsBeingEdited?.customers.map(
+    (customer) => customer.customer.publicId
+  );
 
   return (
     <FormProvider
@@ -143,12 +149,33 @@ export function UpsertUserForm({ customersOptions }: UpsertUserFormProps) {
           placeholder="Digite o email"
         />
 
-        <FormTabs customersOptions={customersOptions} />
+        <FormTabs userThatIsBeingEditedCustomers={userThatIsBeingEditedCustomers} customersOptions={customersOptions} />
       </div>
     </FormProvider>
   );
 }
 
 type UpsertUserFormProps = {
-  customersOptions: User[];
+  userThatIsBeingEdited: {
+    customers: {
+      customer: {
+        publicId: string;
+      };
+    }[];
+  } | null;
+  customersOptions: {
+    publicId: string;
+    type: USER_TYPE;
+    name: string;
+    email: string;
+    phone: string;
+    age: number;
+    cpf: string;
+    cep: string;
+    state: string;
+    address: string;
+    complement: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
 };

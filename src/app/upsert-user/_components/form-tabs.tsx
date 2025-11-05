@@ -5,22 +5,39 @@ import { Input } from "@/components/form/input";
 import { Select } from "@/components/form/select";
 import { cn } from "@/utils/cn";
 import * as Tabs from "@radix-ui/react-tabs";
-import { useRouter, useSearchParams } from "next/navigation";
-import type { User } from "prisma/generated";
+import { useRouter } from "next/navigation";
+import type { USER_TYPE } from "prisma/generated";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 type FormTabsProps = {
-  customersOptions: User[];
+  userThatIsBeingEditedCustomers: string[] | undefined;
+  customersOptions: {
+    publicId: string;
+    type: USER_TYPE;
+    name: string;
+    email: string;
+    phone: string;
+    age: number;
+    cpf: string;
+    cep: string;
+    state: string;
+    address: string;
+    complement: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
 };
 
-export function FormTabs({ customersOptions }: FormTabsProps) {
+export function FormTabs({
+  userThatIsBeingEditedCustomers,
+  customersOptions,
+}: FormTabsProps) {
   const [selectedTab, setSelectedTab] = useState<
     "basic-informations" | "add-customers"
   >("basic-informations");
 
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   function handleSetSelectedTab(tab: "basic-informations" | "add-customers") {
     setSelectedTab(tab);
@@ -30,8 +47,6 @@ export function FormTabs({ customersOptions }: FormTabsProps) {
 
     router.replace(`?${params.toString()}`);
   }
-
-  const currentTab = searchParams.get("tab") ?? "basic-informations";
 
   const stateOptions = [
     { label: "São Paulo", value: "SP" },
@@ -167,6 +182,7 @@ export function FormTabs({ customersOptions }: FormTabsProps) {
           <SearchableSelect
             selectId="addCustomers"
             multiple
+            defaultValue={userThatIsBeingEditedCustomers}
             options={customersOptionsFiltered}
           />
         </div>

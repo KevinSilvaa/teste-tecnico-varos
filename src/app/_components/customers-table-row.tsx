@@ -1,13 +1,26 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import { TableCell, TableRow } from "@/components/ui/table";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import type { User } from "prisma/generated";
+import type { USER_TYPE } from "prisma/generated";
 
 type CustomersTableRowProps = {
-  customer: User;
+  customer: {
+    publicId: string;
+    type: USER_TYPE;
+    name: string;
+    email: string;
+    phone: string;
+    age: number;
+    cpf: string;
+    cep: string;
+    state: string;
+    address: string;
+    complement: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+  };
 };
 
 export function CustomersTableRow({ customer }: CustomersTableRowProps) {

@@ -15,6 +15,7 @@ import { useState } from "react";
 type SearchableSelectProps = {
   multiple?: boolean;
   label?: string;
+  defaultValue?: string | string[];
   selectId: string;
   options: { publicId: string; label: string }[];
 };
@@ -22,11 +23,12 @@ type SearchableSelectProps = {
 export function SearchableSelect({
   multiple = false,
   label,
+  defaultValue,
   selectId,
   options,
 }: SearchableSelectProps) {
   const [selected, setSelected] = useState<string | string[] | undefined>(
-    multiple ? [] : undefined
+    defaultValue ?? (multiple ? [] : undefined)
   );
   const [currentQuery, setCurrentQuery] = useState<string | undefined>(
     undefined
