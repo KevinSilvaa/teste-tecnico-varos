@@ -5,6 +5,7 @@ import { CustomersTable } from "./_components/customers-table";
 import { TableActions } from "./_components/table-actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Prisma } from "prisma/generated";
+import { unstable_cache } from "next/cache";
 
 type DashboardPageProps = {
   searchParams: Promise<{
@@ -136,12 +137,25 @@ export async function DashboardContentAsync({
         : undefined,
   };
 
-  const customers = await prisma.user.findMany({
-    where: customersWhere,
-    take: 10,
-  });
+  const getCachedCustomers = unstable_cache(
+    async () => {
+      const customers = await prisma.user.findMany({
+        where: customersWhere,
+        take: 10,
+      });
 
-  const costumersCount = await prisma.user.count({
+      return { customers: customers };
+    },
+    [startDate, endDate, consultorName, consultorEmail],
+    {
+      tags: ["customers"],
+      revalidate: 60,
+    }
+  );
+
+  const { customers } = await getCachedCustomers();
+
+  const customersCount = await prisma.user.count({
     where: customersWhere,
   });
 
@@ -151,7 +165,7 @@ export async function DashboardContentAsync({
 
       <div className="flex items-center justify-between">
         <CustomersCard
-          costumersCount={costumersCount}
+          customersCount={customersCount}
           startDate={startDate}
           endDate={endDate}
         />

@@ -1,5 +1,6 @@
 "use server";
 
+import { unstable_cache } from "next/cache";
 import { prisma } from "../../../../prisma/prisma";
 
 type GetUserDataActionProps = {
@@ -8,23 +9,35 @@ type GetUserDataActionProps = {
 
 export async function getUserDataAction({ publicId }: GetUserDataActionProps) {
   try {
-    const userData = await prisma.user.findUniqueOrThrow({
-      where: {
-        publicId,
-      },
-      include: {
-        customers: {
-          select: {
-            customer: {
+    const getCachedUserData = unstable_cache(
+      async () => {
+        const userData = await prisma.user.findUniqueOrThrow({
+          where: {
+            publicId,
+          },
+          include: {
+            customers: {
               select: {
-                name: true,
-                publicId: true,
+                customer: {
+                  select: {
+                    name: true,
+                    publicId: true,
+                  },
+                },
               },
             },
           },
-        },
+        });
+
+        return { userData: userData };
       },
-    });
+      [publicId],
+      {
+        tags: ["user-data"],
+      }
+    );
+
+    const { userData } = await getCachedUserData();
 
     if (!userData) {
       return undefined;

@@ -3,6 +3,7 @@
 import type { UpsertUserFormSchema } from "@/app/upsert-user/_components/upsert-user-form";
 import type { Prisma, USER_TYPE } from "prisma/generated";
 import { prisma } from "../../../../prisma/prisma";
+import { updateTag } from "next/cache";
 
 type UpsertUserActionProps = {
   data: UpsertUserFormSchema & {
@@ -38,8 +39,6 @@ export async function upsertUserAction({
       select: { id: true, type: true },
     });
 
-    console.log({ data: data.customers?.length });
-
     if (user.type === "CONSULTOR" && data.customers?.length) {
       const customers = await prisma.user.findMany({
         where: {
@@ -55,6 +54,8 @@ export async function upsertUserAction({
         })),
       });
     }
+
+    updateTag('customers')
 
     return {
       success: true,
