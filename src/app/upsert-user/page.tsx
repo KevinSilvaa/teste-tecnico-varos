@@ -34,7 +34,7 @@ export default async function UpsertUserPage({
     },
   });
 
-  const userThatIsBeingEdited = await prisma.user.findUnique({
+  const userThatIsBeingEdited = await prisma.user.findFirst({
     where: {
       type: "CONSULTOR",
       publicId: customerPublicId,
@@ -54,7 +54,10 @@ export default async function UpsertUserPage({
 
   return (
     <Suspense>
-      <UpsertUserForm userThatIsBeingEdited={userThatIsBeingEdited} customersOptions={customersOptions} />
+      <UpsertUserForm
+        userThatIsBeingEdited={customerPublicId ? userThatIsBeingEdited : null}
+        customersOptions={customersOptions}
+      />
     </Suspense>
   );
 }

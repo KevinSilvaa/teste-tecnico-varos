@@ -161,7 +161,7 @@ export async function DashboardContentAsync({
 
       return { customers: customers };
     },
-    ["customers"],
+    ["customers", consultorName, consultorEmail, startDate, endDate],
     {
       tags: ["customers"],
       revalidate: 3600,
@@ -169,6 +169,7 @@ export async function DashboardContentAsync({
   );
 
   const { customers } = await getCachedCustomers();
+  console.log(customers);
 
   const customersCount = await prisma.user.count({
     where: customersWhere,

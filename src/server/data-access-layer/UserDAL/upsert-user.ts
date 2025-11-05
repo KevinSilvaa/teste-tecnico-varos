@@ -2,7 +2,7 @@
 
 import type { USER_TYPE } from "prisma/generated";
 import { prisma } from "../../../../prisma/prisma";
-import { updateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { UpsertUserFormSchema } from "@/app/upsert-user/_components/UpsertUserForm/upsert-user-form-schema";
 
 type UpsertUserActionProps = {
@@ -37,7 +37,7 @@ export async function upsertUserAction({
       ),
     });
 
-    updateTag("customers");
+    revalidateTag("customers", "max");
 
     return { success: true, error: null };
   } catch (error) {
