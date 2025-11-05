@@ -85,7 +85,7 @@ export function FormTabs({ customersOptions }: FormTabsProps) {
         aria-label="Manage your account"
       >
         <Tabs.Trigger
-          className={cn("py-1 px-2 text-gray-600 rounded", {
+          className={cn("py-1 px-2 cursor-pointer text-gray-600 rounded", {
             "bg-gray-700": selectedTab === "basic-informations",
           })}
           value="basic-informations"
@@ -95,7 +95,7 @@ export function FormTabs({ customersOptions }: FormTabsProps) {
 
         <Tabs.Trigger
           className={cn(
-            "py-1 px-2 text-gray-600 rounded disabled:opacity-50 disabled:cursor-not-allowed",
+            "py-1 px-2 text-gray-600 cursor-pointer rounded disabled:opacity-50 disabled:cursor-not-allowed",
             {
               "bg-gray-700": selectedTab === "add-customers",
             }
