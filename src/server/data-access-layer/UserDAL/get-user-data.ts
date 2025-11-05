@@ -9,35 +9,23 @@ type GetUserDataActionProps = {
 
 export async function getUserDataAction({ publicId }: GetUserDataActionProps) {
   try {
-    const getCachedUserData = unstable_cache(
-      async () => {
-        const userData = await prisma.user.findUniqueOrThrow({
-          where: {
-            publicId,
-          },
-          include: {
-            customers: {
+    const userData = await prisma.user.findUniqueOrThrow({
+      where: {
+        publicId,
+      },
+      include: {
+        customers: {
+          select: {
+            customer: {
               select: {
-                customer: {
-                  select: {
-                    name: true,
-                    publicId: true,
-                  },
-                },
+                name: true,
+                publicId: true,
               },
             },
           },
-        });
-
-        return { userData: userData };
+        },
       },
-      [publicId],
-      {
-        tags: ["user-data"],
-      }
-    );
-
-    const { userData } = await getCachedUserData();
+    });
 
     if (!userData) {
       return undefined;

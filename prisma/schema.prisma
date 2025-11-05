@@ -42,8 +42,8 @@ model UserOnConsultor {
   consultorId Int
   customerId  Int
 
-  consultor User @relation("ConsultorCustomers", fields: [consultorId], references: [id])
-  customer  User @relation("Customer", fields: [customerId], references: [id])
+  consultor User @relation("ConsultorCustomers", fields: [consultorId], references: [id], onDelete: Cascade)
+  customer  User @relation("Customer", fields: [customerId], references: [id], onDelete: Cascade)
 
   @@unique([consultorId, customerId])
   @@map("users_on_consultors")

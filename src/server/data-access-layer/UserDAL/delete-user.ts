@@ -1,5 +1,6 @@
-'use server'
+"use server";
 
+import { updateTag } from "next/cache";
 import { prisma } from "../../../../prisma/prisma";
 
 type DeleteUserActionProps = {
@@ -13,6 +14,8 @@ export async function deleteUserAction({ publicId }: DeleteUserActionProps) {
         publicId,
       },
     });
+
+    updateTag("customers");
 
     return {
       success: true,
