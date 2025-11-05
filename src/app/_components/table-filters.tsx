@@ -46,10 +46,12 @@ export async function TableFilters() {
         <SearchableSelect
           label="Nome do consultor"
           selectId={consultorNameSelectId}
-          options={consultorNameOptions.map((option) => ({
-            publicId: option.publicId,
-            label: option.name,
-          }))}
+          options={consultorNameOptions.map(
+            (option: { publicId: string; name: string }) => ({
+              publicId: option.publicId,
+              label: option.name,
+            })
+          )}
         />
       </div>
 
@@ -57,10 +59,12 @@ export async function TableFilters() {
         <SearchableSelect
           label="Email do consultor"
           selectId={consultorEmailSelectId}
-          options={consultorEmailOptions.map((option) => ({
-            publicId: option.publicId,
-            label: option.email,
-          }))}
+          options={consultorEmailOptions.map(
+            (option: { publicId: string; email: string }) => ({
+              publicId: option.publicId,
+              label: option.email,
+            })
+          )}
         />
       </div>
 

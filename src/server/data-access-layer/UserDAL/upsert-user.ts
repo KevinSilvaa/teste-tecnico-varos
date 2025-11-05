@@ -49,7 +49,7 @@ export async function upsertUserAction({
       });
 
       await prisma.userOnConsultor.createMany({
-        data: customers.map((c) => ({
+        data: customers.map((c: { id: number }) => ({
           consultorId: user.id,
           customerId: c.id,
         })),

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { prisma } from "../../../prisma/prisma";
 import { UpsertUserForm } from "./_components/upsert-user-form";
 
@@ -8,5 +9,9 @@ export default async function UpsertUserPage() {
     },
   });
 
-  return <UpsertUserForm customersOptions={customersOptions} />;
+  return (
+    <Suspense>
+      <UpsertUserForm customersOptions={customersOptions} />
+    </Suspense>
+  );
 }
