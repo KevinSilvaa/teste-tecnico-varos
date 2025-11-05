@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { prisma } from "../../../../prisma/prisma";
 
 type DeleteUserActionProps = {
@@ -9,26 +9,21 @@ type DeleteUserActionProps = {
 
 export async function deleteUserAction({ publicId }: DeleteUserActionProps) {
   try {
-    const userToDelete = await prisma.user.findUnique({
-      where: {
-        publicId,
-      },
-    });
-
-    if (!userToDelete) {
+    if (!publicId) {
       return {
-        success: true,
-        error: "User not found",
+        success: false,
+        error: "Usuário não encontrado",
       };
     }
 
     await prisma.user.delete({
       where: {
-        id: userToDelete.id,
+        publicId,
       },
     });
 
-    revalidateTag("customers", "layout");
+    revalidateTag("customers", "max");
+    revalidatePath("/", "layout");
 
     return {
       success: true,

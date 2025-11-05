@@ -146,9 +146,10 @@ export async function DashboardContentAsync({
 
       return { customers: customers };
     },
-    ["getCustomers"],
+    ["customers"],
     {
       tags: ["customers"],
+      revalidate: 3600,
     }
   );
 

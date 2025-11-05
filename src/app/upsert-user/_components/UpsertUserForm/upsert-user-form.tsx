@@ -94,6 +94,7 @@ export function UpsertUserForm({ customersOptions }: UpsertUserFormProps) {
         <Button
           disabled={!customerPublicId}
           variant="secondary"
+          type="button"
           onClick={handleDeleteUser}
         >
           Deletar usuário
