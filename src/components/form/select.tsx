@@ -73,7 +73,7 @@ export function Select<T>({
               )}
             </SelectPrimitive.SelectTrigger>
 
-            <SelectPrimitive.SelectContent position="item-aligned" className="bg-gray-900 py-2 px-4 max-h-52 overflow-y-auto">
+            <SelectPrimitive.SelectContent className="bg-gray-900 py-2 px-4 max-h-52 overflow-y-auto">
               {options.map((item, index) => (
                 <SelectPrimitive.SelectItem
                   key={index}
