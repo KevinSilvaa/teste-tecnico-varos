@@ -119,7 +119,7 @@ export function SearchableSelect({
               <ComboboxOption
                 key={option.publicId}
                 value={option.publicId}
-                className="group flex cursor-default items-center gap-2 rounded px-2.5 py-2 select-none data-active:bg-neutral-alpha-weak"
+                className="group line-clamp-1 w-full flex cursor-default items-center gap-2 rounded px-2.5 py-2 select-none data-active:bg-neutral-alpha-weak"
               >
                 <span className="text-gray-600">{option.label}</span>
               </ComboboxOption>
