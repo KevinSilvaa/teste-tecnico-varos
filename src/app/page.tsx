@@ -107,24 +107,33 @@ export async function DashboardContentAsync({
         : end
         ? { lte: end }
         : undefined,
-    UserOnConsultor: {
-      some: {
-        consultor: {
-          name: consultorName
-            ? {
-                contains: consultorName,
-                mode: "insensitive",
-              }
-            : undefined,
-          email: consultorEmail
-            ? {
-                contains: consultorEmail,
-                mode: "insensitive",
-              }
-            : undefined,
-        },
-      },
-    },
+    UserOnConsultor:
+      consultorName || consultorEmail
+        ? {
+            some: {
+              consultor: {
+                OR: [
+                  consultorName
+                    ? {
+                        name: {
+                          contains: consultorName,
+                          mode: "insensitive",
+                        },
+                      }
+                    : {},
+                  consultorEmail
+                    ? {
+                        email: {
+                          contains: consultorEmail,
+                          mode: "insensitive",
+                        },
+                      }
+                    : {},
+                ],
+              },
+            },
+          }
+        : undefined,
   };
 
   const customers = await prisma.user.findMany({

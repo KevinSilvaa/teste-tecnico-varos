@@ -7,13 +7,13 @@ import { cn } from "@/utils/cn";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { User } from "prisma/generated";
+import { useFormContext } from "react-hook-form";
 
 type FormTabsProps = {
-  customer?: User;
   customersOptions: User[];
 };
 
-export function FormTabs({ customer, customersOptions }: FormTabsProps) {
+export function FormTabs({ customersOptions }: FormTabsProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -61,6 +61,10 @@ export function FormTabs({ customer, customersOptions }: FormTabsProps) {
     publicId: customer.publicId,
   }));
 
+  const { watch } = useFormContext();
+
+  const userType = watch("type");
+
   return (
     <Tabs.Root
       className="flex flex-col gap-6"
@@ -90,7 +94,7 @@ export function FormTabs({ customer, customersOptions }: FormTabsProps) {
             }
           )}
           value="add-customers"
-          disabled={customer?.type === "CUSTOMER"}
+          disabled={userType === "CUSTOMER"}
         >
           Adicionar clientes
         </Tabs.Trigger>
