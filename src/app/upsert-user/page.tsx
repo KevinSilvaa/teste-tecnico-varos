@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { prisma } from "../../../prisma/prisma";
-import { UpsertUserForm } from "./_components/upsert-user-form";
+import { UpsertUserForm } from "./_components/UpsertUserForm/upsert-user-form";
 
 type UpsertUserPageProps = {
   searchParams: Promise<{
